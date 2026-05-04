@@ -1,0 +1,27 @@
+# Config file with sensitive data
+config.json
+
+# Plan directory
+.windsurf/
+plan.md
+
+# Binary
+google-embeddings-proxy
+
+# Go build files
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Dependency directories
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

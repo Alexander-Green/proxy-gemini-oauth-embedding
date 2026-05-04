@@ -1,0 +1,11 @@
+{
+  "google_api_key": "your-google-api-key-here",
+  "google_embedding_model": "gemini-embedding-2",
+  "embedding_dim": 768,
+  "port": "1234",
+  "log_level": "INFO",
+  "log_payloads": false,
+  "shutdown_timeout_sec": 30,
+  "read_timeout_sec": 30,
+  "write_timeout_sec": 30
+}
