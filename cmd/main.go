@@ -30,7 +30,7 @@ func main() {
 		zap.S().Fatalf("failed to load config: %v", err)
 	}
 
-	googleClient := client.NewClient(cfg.GoogleAPIKey, cfg.GoogleEmbeddingModel, cfg.EmbeddingDim)
+	googleClient := client.NewClient(cfg.GoogleAPIKey, cfg.GoogleEmbeddingModel, cfg.EmbeddingDim, cfg.LogPayloads)
 	embeddingsHandler := handler.NewEmbeddingsHandler(cfg, googleClient)
 
 	mux := http.NewServeMux()

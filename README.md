@@ -42,7 +42,6 @@ Optional fields (with defaults):
 - `google_embedding_model` - Model name (default: gemini-embedding-2)
 - `embedding_dim` - Embedding dimension (default: 768)
 - `port` - Service port (default: 1234)
-- `log_level` - Log level (default: INFO)
 - `log_payloads` - Enable payload logging (default: false)
 - `shutdown_timeout_sec` - Graceful shutdown timeout (default: 30)
 - `read_timeout_sec` - HTTP read timeout (default: 30)

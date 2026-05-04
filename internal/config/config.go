@@ -13,7 +13,6 @@ type Config struct {
 	GoogleEmbeddingModel string `json:"google_embedding_model"`
 	EmbeddingDim         int    `json:"embedding_dim"`
 	Port                 string `json:"port"`
-	LogLevel             string `json:"log_level"`
 	LogPayloads          bool   `json:"log_payloads"`
 	ShutdownTimeoutSec   int    `json:"shutdown_timeout_sec"`
 	ReadTimeoutSec       int    `json:"read_timeout_sec"`
@@ -49,9 +48,6 @@ func Load(path string) (*Config, error) {
 	}
 	if cfg.EmbeddingDim == 0 {
 		cfg.EmbeddingDim = 768
-	}
-	if cfg.LogLevel == "" {
-		cfg.LogLevel = "INFO"
 	}
 	if cfg.ShutdownTimeoutSec == 0 {
 		cfg.ShutdownTimeoutSec = 30

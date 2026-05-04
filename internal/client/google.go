@@ -17,17 +17,19 @@ const (
 )
 
 type Client struct {
-	apiKey     string
-	model      string
-	dim        int
-	httpClient *http.Client
+	apiKey      string
+	model       string
+	dim         int
+	logPayloads bool
+	httpClient  *http.Client
 }
 
-func NewClient(apiKey, model string, dim int) *Client {
+func NewClient(apiKey, model string, dim int, logPayloads bool) *Client {
 	return &Client{
-		apiKey: apiKey,
-		model:  model,
-		dim:    dim,
+		apiKey:      apiKey,
+		model:       model,
+		dim:         dim,
+		logPayloads: logPayloads,
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
 		},
@@ -71,12 +73,20 @@ func (c *Client) EmbedText(ctx context.Context, text string) ([]float32, int, er
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
-		zap.S().Errorf("google API returned status %d: %s", resp.StatusCode, string(body))
+		if c.logPayloads {
+			zap.S().Infof("google API response status: %d | body: %s", resp.StatusCode, string(body))
+		} else {
+			zap.S().Infof("google API response status: %d", resp.StatusCode)
+		}
 		return nil, 0, fmt.Errorf("google API returned status %d: %s", resp.StatusCode, string(body))
 	}
 
 	body, _ := io.ReadAll(resp.Body)
-	zap.S().Infof("google API response code: %d | body: %s", resp.StatusCode, string(body))
+	if c.logPayloads {
+		zap.S().Infof("google API response status: %d | body: %s", resp.StatusCode, string(body))
+	} else {
+		zap.S().Infof("google API response status: %d", resp.StatusCode)
+	}
 
 	var result struct {
 		Embedding struct {
