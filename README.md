@@ -35,6 +35,30 @@ cp config.example.json config.json
 }
 ```
 
+### OpenAI compatibility scope
+
+Implemented endpoints:
+- `POST /v1/embeddings`
+- `GET /health`
+
+This proxy does not implement the full OpenAI API surface (e.g., `GET /v1/models`).
+
+## Logging
+
+All requests are logged via middleware with request/response summary lines:
+- Incoming request: method, path, remote_addr, user_agent
+- Completed response: httpCode, method, path, remote_addr, user_agent, duration
+
+Example (404 on unknown endpoint):
+```
+incoming request: method=GET path=/v1/models remote_addr=127.0.0.1:42666 user_agent=curl/8.5.0
+request completed: httpCode=404 method=GET path=/v1/models remote_addr=127.0.0.1:42666 user_agent=curl/8.5.0 duration=59.122µs
+```
+
+## Troubleshooting
+
+- If you see `404` for paths like `/v1/v1/embeddings`, remove `/v1` from `baseUrl` in your OpenClaw config. OpenClaw adds `/v1` automatically.
+
 Required fields:
 - `google_api_key` - Google API key
 
@@ -164,13 +188,15 @@ Health check endpoint.
       "memorySearch": {
         "model": "gemini-embedding-2",
         "remote": {
-          "baseUrl": "http://localhost:1234/v1"
+          "baseUrl": "http://localhost:1234"
         }
       }
     }
   }
 }
 ```
+
+Note: OpenClaw automatically prefixes embedding requests with `/v1` (e.g. `/v1/embeddings`). Do not include `/v1` in `baseUrl` to avoid paths like `/v1/v1/embeddings`.
 
 2. Update PostClaw database:
 ```sql

@@ -1,5 +1,6 @@
 # Config file with sensitive data
 config.json
+config.test.json
 
 # Plan directory
 .windsurf/

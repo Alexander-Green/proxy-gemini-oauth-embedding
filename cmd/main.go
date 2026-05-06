@@ -15,6 +15,7 @@ import (
 	"google-embeddings-proxy/internal/client"
 	"google-embeddings-proxy/internal/config"
 	"google-embeddings-proxy/internal/handler"
+	"google-embeddings-proxy/internal/middleware"
 )
 
 func main() {
@@ -37,9 +38,12 @@ func main() {
 	mux.HandleFunc("/health", embeddingsHandler.HandleHealth)
 	mux.HandleFunc("/v1/embeddings", embeddingsHandler.HandleEmbeddings)
 
+	// Wrap mux with logging middleware
+	handlerWithLogging := middleware.Logging(mux)
+
 	srv := &http.Server{
 		Addr:         ":" + cfg.Port,
-		Handler:      mux,
+		Handler:      handlerWithLogging,
 		ReadTimeout:  time.Duration(cfg.ReadTimeoutSec) * time.Second,
 		WriteTimeout: time.Duration(cfg.WriteTimeoutSec) * time.Second,
 	}
