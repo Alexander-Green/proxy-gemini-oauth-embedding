@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -47,6 +48,7 @@ func (h *EmbeddingsHandler) HandleEmbeddings(w http.ResponseWriter, r *http.Requ
 	// Generate embeddings for each text
 	embeddings := make([][]float32, len(texts))
 	totalTokens := 0
+	startTime := time.Now()
 	for i, text := range texts {
 		emb, tokenCount, err := h.client.EmbedText(r.Context(), text)
 		if err != nil {
@@ -64,6 +66,7 @@ func (h *EmbeddingsHandler) HandleEmbeddings(w http.ResponseWriter, r *http.Requ
 		embeddings[i] = emb
 		totalTokens += tokenCount
 	}
+	duration := time.Since(startTime)
 
 	// Build OpenAI-compatible response
 	response := model.OpenAIEmbeddingResponse{
@@ -90,7 +93,7 @@ func (h *EmbeddingsHandler) HandleEmbeddings(w http.ResponseWriter, r *http.Requ
 		})
 	}
 
-	zap.S().Infof("[%s] INFO: successfully generated %d embeddings", requestID, len(embeddings))
+	zap.S().Infof("[%s] INFO: successfully generated %d embeddings in %s", requestID, len(embeddings), duration)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
